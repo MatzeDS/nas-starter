@@ -1,0 +1,20 @@
+version: "3.8"
+
+services:
+  nas-starter:
+    image: matzeds/nas-starter
+    build:
+      dockerfile: Dockerfile
+      context: .
+    restart: always
+    environment:
+      MAC_ADDR: D4:5D:64:05:31:3E
+      BROADCAST_IP: 192.168.178.255
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.nas.entrypoints=websecure"
+      - "traefik.http.routers.nas.rule=Host(`nas-starter.structible.de`)"
+      - "traefik.http.routers.nas.service=nas-service"
+      - "traefik.http.services.nas-service.loadbalancer.server.port=8090"
+      - "traefik.http.routers.nas.tls.certresolver=myresolver"
+    network_mode: host
